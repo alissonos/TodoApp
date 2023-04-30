@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  *
@@ -20,11 +21,11 @@ public class ConnectionFactory {
     public static final String USER = "root";
     public static final String PASS = "Oliveira31";
 
-    public static Connection getConnection() {
+    public static Connection getConnection() throws ClassNotFoundException {
         try {
             Class.forName(DRIVER);
             return DriverManager.getConnection(URL, USER, PASS);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new RuntimeException("Erro na conexão com o banco de dados", e);
         }
     }
@@ -34,7 +35,7 @@ public class ConnectionFactory {
 			if(connection != null) {
 				connection.close();
 			}
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			throw new RuntimeException("Erro ao fechar a conexão com o banco de dados");
 		}
 	}
@@ -48,7 +49,7 @@ public class ConnectionFactory {
             if (statement != null) {
                 statement.close();
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new RuntimeException("Erro ao fechar a conexão com o banco de dados");
         }
     }
@@ -66,7 +67,7 @@ public class ConnectionFactory {
             if (resultSet != null) {
                 resultSet.close();
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new RuntimeException("Erro ao fechar a conexão com o banco de dados");
         }
     }
