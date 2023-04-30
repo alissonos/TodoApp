@@ -131,12 +131,15 @@ public class TaskController {
         } finally {
             ConnectionFactory.closeConnection(connection, statement, resultSet);
         }
-
+  
+        
+        
+        
         //lista de tarefas que foi criada e carregada do banco de dados;
         return tasks;
     }
 
-    public void removeById(int taskId) throws SQLException {
+    public void removeById(int taskId) throws SQLException, ClassNotFoundException {
 
         String sql = "DELETE FROM tasks WHERE id = ?";
 
