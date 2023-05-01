@@ -52,7 +52,6 @@ public class TaskController {
         } finally {
             ConnectionFactory.closeConnection(connection, statement);
         }
-
     }
 
     public void update(Task task) {
@@ -162,8 +161,8 @@ public class TaskController {
 
             //Executando a query
             statement.execute();
-        } catch (SQLException e) {
-            throw new SQLException("Erro ao deletar tarefa" + e.getMessage(), e);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao deletar tarefa" + e.getMessage(), e);
         } finally {
             ConnectionFactory.closeConnection(connection, statement);
         }
