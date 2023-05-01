@@ -9,10 +9,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import model.Task;
 import util.ConnectionFactory;
+import java.sql.Date;
+
 
 /**
  *
@@ -22,8 +23,14 @@ public class TaskController {
 
     public void save(Task task) {
 
-        String sql = "INSERT INTO tasks (idProject, name, description, completed, "
-                + "notes, deadline, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO tasks (idProject, "
+                + "name, "
+                + "description, "
+                + "completed, "
+                + "notes, "
+                + "deadline, "
+                + "createdAt, "
+                + "updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         Connection connection = null;
         PreparedStatement statement = null;
@@ -83,7 +90,7 @@ public class TaskController {
 
             //Executando a query
             statement.execute();
-        } catch (Exception e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException("Erro ao atualizar tarefa " + e.getMessage(), e);
         }
     }
@@ -131,10 +138,7 @@ public class TaskController {
         } finally {
             ConnectionFactory.closeConnection(connection, statement, resultSet);
         }
-  
-        
-        
-        
+
         //lista de tarefas que foi criada e carregada do banco de dados;
         return tasks;
     }
