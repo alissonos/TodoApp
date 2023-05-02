@@ -3,16 +3,44 @@
  */
 package TodoApp;
 
-import java.sql.Connection;
-import util.ConnectionFactory;
+import controller.ProjectController;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.List;
+import model.Project;
 
 public class Main {
 
-    public static void main(String[] args) throws ClassNotFoundException {
+    public static void main(String[] args) throws ClassNotFoundException, SQLException {
 
-        Connection c = ConnectionFactory.getConnection();
+        ProjectController projectController = new ProjectController();
+//        Project project = new Project();
+//
+//        project.setName("Projeto Teste");
+//        project.setDescription("description");
+//        project.setCreatedAt(new Date());
+//        project.setUpdatedAt(new Date());
+//        projectController.save(project);
 
-        ConnectionFactory.closeConnection(c);
+        Project project = new Project();
+        project.setId(36);
+        project.setName("Novo nome de projeto");
+        project.setDescription("description");
+        project.setCreatedAt(new Date());
+        project.setUpdatedAt(new Date());
 
+        projectController.update(project);
+
+//		
+//		project.setId(1);
+//		project.setName("Novo nome do projeto");
+//		project.setDescription("Nova descrição");
+//		project.setCreatedAt(new Date());
+//		project.setUpdatedAt(new Date());
+//		projectController.update(project);
+//
+        List<Project> projects = projectController.getAll();
+        System.out.println("Total de projetos = " + projects.size());
+        projectController.removeById(36);
     }
 }
