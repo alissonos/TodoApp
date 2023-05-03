@@ -104,7 +104,7 @@ public class TaskController {
         ResultSet resultSet = null;
 
         //lista de tarefas que será devolvida quando a chamada do método acontecer
-        List<Task> tasks = new ArrayList<>();
+        List<Task> tasks = new ArrayList<Task>();
 
         try {
             //Criação de conexão
