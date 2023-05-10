@@ -4,17 +4,35 @@
  */
 package view;
 
+import controller.ProjectController;
+import controller.TaskController;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
+import model.Project;
+
 /**
  *
  * @author Alisson
  */
 public class MainScreen extends javax.swing.JFrame {
-
-    /**
-     * Creates new form MainScreen
-     */
-    public MainScreen() {
+    
+    ProjectController projectController;
+    TaskController taskController;
+    
+    DefaultListModel projectModel; 
+    
+    public MainScreen() throws ClassNotFoundException {
         initComponents();
+        decoreteTableTask();
+        
+        initDataController();
+        initComponentsModel();
     }
 
     /**
@@ -44,7 +62,7 @@ public class MainScreen extends javax.swing.JFrame {
         jListProjects = new javax.swing.JList<>();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTableTasks = new javax.swing.JTable();
 
         jPanelEmptylist.setBackground(java.awt.Color.white);
 
@@ -195,11 +213,6 @@ public class MainScreen extends javax.swing.JFrame {
         jListProjects.setBackground(java.awt.Color.white);
         jListProjects.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jListProjects.setForeground(new java.awt.Color(0, 0, 0));
-        jListProjects.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jListProjects.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jListProjects.setFixedCellHeight(50);
         jListProjects.setSelectionBackground(new java.awt.Color(0, 153, 102));
@@ -222,9 +235,9 @@ public class MainScreen extends javax.swing.JFrame {
         jPanel5.setBackground(java.awt.Color.white);
         jPanel5.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jTable1.setBackground(java.awt.Color.white);
-        jTable1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTableTasks.setBackground(java.awt.Color.white);
+        jTableTasks.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jTableTasks.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -250,12 +263,12 @@ public class MainScreen extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setGridColor(new java.awt.Color(255, 255, 255));
-        jTable1.setRowHeight(40);
-        jTable1.setSelectionBackground(new java.awt.Color(204, 255, 204));
-        jTable1.setShowGrid(true);
-        jTable1.setShowVerticalLines(false);
-        jScrollPane1.setViewportView(jTable1);
+        jTableTasks.setGridColor(new java.awt.Color(255, 255, 255));
+        jTableTasks.setRowHeight(40);
+        jTableTasks.setSelectionBackground(new java.awt.Color(204, 255, 204));
+        jTableTasks.setShowGrid(true);
+        jTableTasks.setShowVerticalLines(false);
+        jScrollPane1.setViewportView(jTableTasks);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -306,8 +319,19 @@ public class MainScreen extends javax.swing.JFrame {
 
     private void jLabelProjectsAddMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelProjectsAddMouseClicked
         // TODO add your handling code here:
-        ProjectDialogScreen dialogScreen = new ProjectDialogScreen(this, rootPaneCheckingEnabled);
-        dialogScreen.setVisible(true);
+        ProjectDialogScreen projectDialogScreen = new ProjectDialogScreen(this, rootPaneCheckingEnabled);
+        projectDialogScreen.setVisible(true);
+        
+        projectDialogScreen.addWindowListener(new WindowAdapter(){
+            @Override
+            public void windowClosed(WindowEvent e) {
+                try {
+                    loadProjects();
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
     }//GEN-LAST:event_jLabelProjectsAddMouseClicked
 
     private void jLabelTasksAddMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelTasksAddMouseClicked
@@ -348,7 +372,11 @@ public class MainScreen extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainScreen().setVisible(true);
+                try {
+                    new MainScreen().setVisible(true);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -372,6 +400,40 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelTooBar;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPaneProjects;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTableTasks;
     // End of variables declaration//GEN-END:variables
+
+    
+    public void decoreteTableTask() {
+        //Customizando o header da table de tarefas
+        jTableTasks.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+        jTableTasks.getTableHeader().setBackground(new Color(0, 153, 102));
+        jTableTasks.getTableHeader().setForeground(new Color(255, 255, 255));
+        
+        //Criando um sort automático para as colunas da table
+        jTableTasks.setAutoCreateRowSorter(true);
+    }
+    
+    public void initDataController() {
+        projectController = new ProjectController();
+        taskController = new TaskController();
+    }
+    
+    public void initComponentsModel() throws ClassNotFoundException {
+        projectModel = new DefaultListModel();
+        loadProjects();
+    }
+    
+    public void loadProjects() throws ClassNotFoundException {
+        List<Project> projects = projectController.getAll();
+        
+        projectModel.clear();
+        
+        for (int i = 0; i < projects.size(); i++) {
+            
+            Project project = projects.get(i);
+            projectModel.addElement(project);
+        }
+        jListProjects.setModel(projectModel);
+    }
 }
