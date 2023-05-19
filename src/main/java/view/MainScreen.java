@@ -360,6 +360,16 @@ public final class MainScreen extends javax.swing.JFrame {
         taskDialogScreen.setProject(project);
         
         taskDialogScreen.setVisible(true);
+        
+        taskDialogScreen.addWindowListener(new WindowAdapter() {
+            
+            public void windowClosed(WindowEvent e) {
+                
+                int projectindex = jListProjects.getSelectedIndex();
+                Project project = (Project) projectsModel.get(projectindex);
+                loadTasks(project.getId());
+            }
+        });
     }//GEN-LAST:event_jLabelTasksAddMouseClicked
 
     private void jTableTasksMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableTasksMouseClicked
