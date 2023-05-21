@@ -143,7 +143,7 @@ public class TaskController {
         return tasks;
     }
 
-    public void removeById(int taskId) throws SQLException, ClassNotFoundException {
+    public void removeById(int taskId) {
 
         String sql = "DELETE FROM tasks WHERE id = ?";
 
