@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import model.Project;
 import model.Task;
+import util.DeadLineColumnCellRenderer;
 import util.TaskTableModel;
 
 /**
@@ -32,9 +33,11 @@ public final class MainScreen extends javax.swing.JFrame {
 
     public MainScreen() throws ClassNotFoundException {
         initComponents();
-        decoreteTableTask();
+        
         initDataController();
         initComponentsModel();
+        
+        decoreteTableTask();
     }
 
     /**
@@ -457,9 +460,12 @@ public final class MainScreen extends javax.swing.JFrame {
         jTableTasks.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
         jTableTasks.getTableHeader().setBackground(new Color(0, 153, 102));
         jTableTasks.getTableHeader().setForeground(new Color(255, 255, 255));
-
+        
+        jTableTasks.getColumnModel().getColumn(2)
+                .setCellRenderer(new DeadLineColumnCellRenderer());
+        
         //Criando um sort automático para as colunas da table
-        jTableTasks.setAutoCreateRowSorter(true);
+        //jTableTasks.setAutoCreateRowSorter(true);
     }
 
     public void initDataController() {
