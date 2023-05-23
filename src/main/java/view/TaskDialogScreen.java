@@ -16,14 +16,14 @@ import model.Task;
  * @author Alisson
  */
 public class TaskDialogScreen extends javax.swing.JDialog {
-    
+
     TaskController controller;
     Project project;
 
     public TaskDialogScreen(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        
+
         controller = new TaskController();
     }
 
@@ -192,29 +192,36 @@ public class TaskDialogScreen extends javax.swing.JDialog {
     private void jLabelTooBarSaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelTooBarSaveMouseClicked
         // TODO add your handling code here:
         try {
-            Task task = new Task();
-            
-            task.setIdProject(project.getId());
-            
-            task.setName(jTextFieldName.getText());
-            task.setDescription( jTextAreaDescritpion.getText());
-            task.setNotes(jTextAreaNotes.getText());
-            task.setIsCompleted(false);
-            task.setCreatedAt(new Date());
-            task.setUpdateAt(new Date());
-            
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            Date deadline = null;
-            deadline = dateFormat.parse(jFormattedTextFieldDeadLine.getText());
-            task.setDeadline(deadline);
-            
-            controller.save(task);
-            
-            JOptionPane.showMessageDialog(rootPane, "Tarefa salva com sucesso");
+            if (!jTextFieldName.getText().isEmpty()
+                    && !jFormattedTextFieldDeadLine.getText().isEmpty()) {
+
+                Task task = new Task();
+
+                task.setIdProject(project.getId());
+
+                task.setName(jTextFieldName.getText());
+                task.setDescription(jTextAreaDescritpion.getText());
+                task.setNotes(jTextAreaNotes.getText());
+                task.setIsCompleted(false);
+                task.setCreatedAt(new Date());
+                task.setUpdateAt(new Date());
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                Date deadline = null;
+                deadline = dateFormat.parse(jFormattedTextFieldDeadLine.getText());
+                task.setDeadline(deadline);
+
+                controller.save(task);
+
+                JOptionPane.showMessageDialog(rootPane, "Tarefa salva com sucesso");
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "A tarefa não foi salva, pois "
+                        + "existem campos obrigatórios a serem preenchidos.");
+            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(rootPane, e);
         }
-        this.dispose();
     }//GEN-LAST:event_jLabelTooBarSaveMouseClicked
 
     private void jFormattedTextFieldDeadLineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFormattedTextFieldDeadLineActionPerformed
